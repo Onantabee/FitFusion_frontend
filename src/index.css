@@ -25,10 +25,56 @@ p {
   color:#fff;
 }
 
-a {
-  color: #f5f9f9;
+.pass-link {
+  color: #ff6600;
   font-size: 14px;
   text-decoration: none;
+  cursor: pointer;
+}
+
+.auth-options {
+  z-index: 100;
+  display: flex; 
+  justify-content: space-between;
+  align-items: center;
+}
+
+.auth-options div {
+  display: flex; 
+  justify-content: space-between;
+  align-items: center;
+}
+
+.auth-options div text, .auth-options a  {
+  font-size: 14px;
+}
+
+.auth-options input[type="checkbox"] {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background-color: white;
+  border: 2px solid #999;
+  border-radius: 4px;
+  cursor: pointer;
+  position: relative;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.auth-options input[type="checkbox"]:checked {
+  background-color: #4caf50; 
+  border-color: #4caf50;
+}
+
+.auth-options input[type="checkbox"]:checked::before {
+  content: '✔'; 
+  font-size: 16px;
+  color: white;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 a:hover {
@@ -193,11 +239,11 @@ button.ghost:hover {
   color: #04191a;
   font-size: 18px;
   border-radius: 50%;
-  background-color: #f0f0f0;
+  background-color: #d9d9d9;
   transition: background-color 0.3s, transform 0.3s;
 }
 
-.social:hover {
+.social-container .social:hover {
   background-color: #2e5e6d;
   color: #fff;
   transform: scale(1.1);
