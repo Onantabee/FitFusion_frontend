@@ -90,7 +90,11 @@ const FormContainer = ({ type, handleTogglePanel }) => {
             </>
           )}
         </div>
-        <button className="live-button">
+        <button className="live-button" onClick={isRegister ? (e)=>{
+          e.preventDefault()
+        } : ()=>{
+          e.preventDefault()
+        }}>
           {isRegister ? "Sign Up" : "Sign In"}
         </button>
       </form>
