@@ -14,11 +14,11 @@ const App = () => {
     >
       <FormContainer
         type="register"
-        handleTogglePanel={() => setIsRightPanelActive(true)}
+        setIsRightPanelActive={setIsRightPanelActive}
       />
       <FormContainer
         type="login"
-        handleTogglePanel={() => setIsRightPanelActive(false)}
+        setIsRightPanelActive={setIsRightPanelActive}
       />
       <OverlayPanel
         isRightPanelActive={isRightPanelActive}

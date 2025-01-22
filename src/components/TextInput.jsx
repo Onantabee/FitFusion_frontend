@@ -6,9 +6,10 @@ const TextInput = ({
   inputType,
   iconClassName,
   textInputWidth,
+  value,
+  onChange
 }) => {
   const [isFocused, setIsFocused] = useState(false);
-  const [inputValue, setInputValue] = useState("");
 
   const labelStyle = {
     position: "absolute",
@@ -17,13 +18,13 @@ const TextInput = ({
     letterSpacing: "0.1em",
     padding: "0 8px",
     borderRadius: "20px",
-    color: isFocused || inputValue ? "#ffffff" : "#737373",
-    backgroundColor: isFocused || inputValue ? "#ff6600" : "transparent",
+    color: isFocused || value ? "#ffffff" : "#737373",
+    backgroundColor: isFocused || value ? "#ff6600" : "transparent",
     zIndex: 1,
     transition: "0.2s ease",
     transform:
-      isFocused || inputValue ? "translate(-4px, -18px)" : "translateY(0)",
-    fontSize: isFocused || inputValue ? "13px" : "15px",
+      isFocused || value ? "translate(-4px, -18px)" : "translateY(0)",
+    fontSize: isFocused || value ? "13px" : "15px",
     userSelect: "none",
   };
 
@@ -73,7 +74,7 @@ const TextInput = ({
   };
 
   const inputIconStyle = {
-    color: isFocused || inputValue ? "#ff6600" : "#737373",
+    color: isFocused || value ? "#ff6600" : "#737373",
     padding: "0 5px",
   };
 
@@ -95,8 +96,8 @@ const TextInput = ({
           <input
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
-            onChange={(e) => setInputValue(e.target.value)}
-            value={inputValue}
+            onChange={onChange}
+            value={value}
             style={inputStyle}
             type={inputType}
             name={inputName}

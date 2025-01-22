@@ -45,7 +45,7 @@ p {
   align-items: center;
 }
 
-.auth-options div text, .auth-options a  {
+.auth-options div span, .auth-options a  {
   font-size: 14px;
 }
 

@@ -1,9 +1,61 @@
-import React from "react";
+import React, { useState } from "react";
 import SocialButtons from "./SocialButtons";
 import TextInput from "./TextInput";
+import axios from "axios";
 
-const FormContainer = ({ type, handleTogglePanel }) => {
+const FormContainer = ({ type, setIsRightPanelActive }) => {
   const isRegister = type === "register";
+
+  const [formValues, setFormValues] = useState({
+    firstname: "",
+    lastname: "",
+    username: "",
+    email: "",
+    password: "",
+  });
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+
+    const endpoint = "http://localhost:8080/api/register";
+
+    try {
+      const response = await axios.post(endpoint, formValues);
+      console.log("Server Response:", response.data);
+
+      if (isRegister) {
+        setFormValues({
+          firstname: "",
+          lastname: "",
+          username: "",
+          email: "",
+          password: "",
+        });
+      }
+      setIsRightPanelActive(false)
+
+    } catch (err) {
+      console.error("Error:", err);
+      setError(
+        err.response?.data?.message || "An error occurred. Please try again."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div
@@ -11,7 +63,7 @@ const FormContainer = ({ type, handleTogglePanel }) => {
         isRegister ? "register-container" : "login-container"
       }`}
     >
-      <form>
+      <form onSubmit={handleSubmit}>
         <div className="register-header">
           <h1>{isRegister ? "Create Account" : "Sign In"}</h1>
           <SocialButtons />
@@ -31,6 +83,8 @@ const FormContainer = ({ type, handleTogglePanel }) => {
                   inputType="text"
                   iconClassName="fas fa-user"
                   textInputWidth="100%"
+                  value={formValues.firstname}
+                  onChange={handleChange}
                 />
                 <TextInput
                   label="Last Name"
@@ -38,6 +92,8 @@ const FormContainer = ({ type, handleTogglePanel }) => {
                   inputType="text"
                   iconClassName="fas fa-user"
                   textInputWidth="100%"
+                  value={formValues.lastname}
+                  onChange={handleChange}
                 />
               </div>
               <TextInput
@@ -46,6 +102,8 @@ const FormContainer = ({ type, handleTogglePanel }) => {
                 inputType="text"
                 iconClassName="fas fa-user"
                 textInputWidth="100%"
+                value={formValues.username}
+                onChange={handleChange}
               />
               <TextInput
                 label="Email"
@@ -53,6 +111,8 @@ const FormContainer = ({ type, handleTogglePanel }) => {
                 inputType="text"
                 iconClassName="fas fa-envelope"
                 textInputWidth="100%"
+                value={formValues.email}
+                onChange={handleChange}
               />
               <TextInput
                 label="Password"
@@ -60,6 +120,8 @@ const FormContainer = ({ type, handleTogglePanel }) => {
                 inputType="password"
                 iconClassName="fas fa-lock"
                 textInputWidth="100%"
+                value={formValues.password}
+                onChange={handleChange}
               />
             </>
           ) : (
@@ -70,6 +132,8 @@ const FormContainer = ({ type, handleTogglePanel }) => {
                 inputType="text"
                 iconClassName="fas fa-envelope"
                 textInputWidth="300px"
+                // value={formValues.}
+                onChange={handleChange}
               />
               <TextInput
                 label="Password"
@@ -77,11 +141,13 @@ const FormContainer = ({ type, handleTogglePanel }) => {
                 inputType="password"
                 iconClassName="fas fa-lock"
                 textInputWidth="300px"
+                // value={formValues.}
+                onChange={handleChange}
               />
               <div className="auth-options">
                 <div>
                   <input type="checkbox" />
-                  <text>Remember me</text>
+                  <span>Remember me</span>
                 </div>
                 <a href="#" className="pass-link">
                   Forgot your password?
@@ -90,11 +156,7 @@ const FormContainer = ({ type, handleTogglePanel }) => {
             </>
           )}
         </div>
-        <button className="live-button" onClick={isRegister ? (e)=>{
-          e.preventDefault()
-        } : ()=>{
-          e.preventDefault()
-        }}>
+        <button className="live-button" type="submit">
           {isRegister ? "Sign Up" : "Sign In"}
         </button>
       </form>
