@@ -197,6 +197,7 @@ button {
 }
 
 .live-button {
+  z-index: 200;
   width: 250px;
 }
 

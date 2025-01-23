@@ -6,11 +6,16 @@ import axios from "axios";
 const FormContainer = ({ type, setIsRightPanelActive }) => {
   const isRegister = type === "register";
 
-  const [formValues, setFormValues] = useState({
+  const [registerFormValues, setRegisterFormValues] = useState({
     firstname: "",
     lastname: "",
     username: "",
     email: "",
+    password: "",
+  });
+
+  const [loginFormValues, setLoginFormValues] = useState({
+    username: "",
     password: "",
   });
 
@@ -19,10 +24,18 @@ const FormContainer = ({ type, setIsRightPanelActive }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormValues((prevValues) => ({
-      ...prevValues,
-      [name]: value,
-    }));
+
+    if (isRegister) {
+      setRegisterFormValues((prevValues) => ({
+        ...prevValues,
+        [name]: value,
+      }));
+    } else {
+      setLoginFormValues((prevValues) => ({
+        ...prevValues,
+        [name]: value,
+      }));
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -30,23 +43,22 @@ const FormContainer = ({ type, setIsRightPanelActive }) => {
     setLoading(true);
     setError("");
 
-    const endpoint = "http://localhost:8080/api/register";
+    const endpoint = isRegister
+      ? "http://localhost:8080/api/register"
+      : "http://localhost:8080/api/login";
 
     try {
-      const response = await axios.post(endpoint, formValues);
-      console.log("Server Response:", response.data);
-
       if (isRegister) {
-        setFormValues({
-          firstname: "",
-          lastname: "",
-          username: "",
-          email: "",
-          password: "",
-        });
+        const response = await axios.post(endpoint, registerFormValues);
+        console.log("Server Response:", response.data);
+        resetForm();
+      } else {
+        console.log(loginFormValues);
+        const response = await axios.post(endpoint, loginFormValues);
+        console.log(response);
+        console.log("Server Response:", response.data);
       }
-      setIsRightPanelActive(false)
-
+      setIsRightPanelActive(false);
     } catch (err) {
       console.error("Error:", err);
       setError(
@@ -55,6 +67,16 @@ const FormContainer = ({ type, setIsRightPanelActive }) => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const resetForm = () => {
+    setRegisterFormValues({
+      firstname: "",
+      lastname: "",
+      username: "",
+      email: "",
+      password: "",
+    });
   };
 
   return (
@@ -83,7 +105,7 @@ const FormContainer = ({ type, setIsRightPanelActive }) => {
                   inputType="text"
                   iconClassName="fas fa-user"
                   textInputWidth="100%"
-                  value={formValues.firstname}
+                  value={registerFormValues.firstname}
                   onChange={handleChange}
                 />
                 <TextInput
@@ -92,7 +114,7 @@ const FormContainer = ({ type, setIsRightPanelActive }) => {
                   inputType="text"
                   iconClassName="fas fa-user"
                   textInputWidth="100%"
-                  value={formValues.lastname}
+                  value={registerFormValues.lastname}
                   onChange={handleChange}
                 />
               </div>
@@ -102,7 +124,7 @@ const FormContainer = ({ type, setIsRightPanelActive }) => {
                 inputType="text"
                 iconClassName="fas fa-user"
                 textInputWidth="100%"
-                value={formValues.username}
+                value={registerFormValues.username}
                 onChange={handleChange}
               />
               <TextInput
@@ -111,7 +133,7 @@ const FormContainer = ({ type, setIsRightPanelActive }) => {
                 inputType="text"
                 iconClassName="fas fa-envelope"
                 textInputWidth="100%"
-                value={formValues.email}
+                value={registerFormValues.email}
                 onChange={handleChange}
               />
               <TextInput
@@ -120,19 +142,19 @@ const FormContainer = ({ type, setIsRightPanelActive }) => {
                 inputType="password"
                 iconClassName="fas fa-lock"
                 textInputWidth="100%"
-                value={formValues.password}
+                value={registerFormValues.password}
                 onChange={handleChange}
               />
             </>
           ) : (
             <>
               <TextInput
-                label="Email"
-                inputName="email"
+                label="Username"
+                inputName="username"
                 inputType="text"
-                iconClassName="fas fa-envelope"
+                iconClassName="fas fa-user"
                 textInputWidth="300px"
-                // value={formValues.}
+                value={loginFormValues.username}
                 onChange={handleChange}
               />
               <TextInput
@@ -141,7 +163,7 @@ const FormContainer = ({ type, setIsRightPanelActive }) => {
                 inputType="password"
                 iconClassName="fas fa-lock"
                 textInputWidth="300px"
-                // value={formValues.}
+                value={loginFormValues.password}
                 onChange={handleChange}
               />
               <div className="auth-options">
@@ -156,9 +178,11 @@ const FormContainer = ({ type, setIsRightPanelActive }) => {
             </>
           )}
         </div>
-        <button className="live-button" type="submit">
+        <button className="live-button" type="submit" disabled={loading}>
           {isRegister ? "Sign Up" : "Sign In"}
         </button>
+        {/* {loading && <p>Loading...</p>}
+        {error && <p className="error-message">{error}</p>} */}
       </form>
     </div>
   );
